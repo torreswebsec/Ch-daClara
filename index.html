@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Lista de Presentes - Chá de Bebê</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background: #ffe2e2;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #ff6b6b;
+      font-size: 28px;
+    }
+    .container {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .item {
+      background: #f9f9f9;
+      padding: 18px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 5px solid #ff9a9a;
+      transition: all 0.3s ease;
+    }
+    .item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    .item.reservado {
+      background: #f0f0f0;
+      border-left-color: #cccccc;
+    }
+    .item-text {
+      flex-grow: 1;
+      font-weight: 500;
+    }
+    .item-escolhido {
+      color: #888;
+      text-decoration: line-through;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ff9a9a;
+      color: white;
+      font-weight: bold;
+      transition: all 0.3s;
+      min-width: 120px;
+    }
+    button:hover {
+      background: #ff7b7b;
+      transform: scale(1.05);
+    }
+    button:disabled {
+      background: #cccccc;
+      color: #888;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .status {
+      text-align: center;
+      margin: 25px 0;
+      font-weight: bold;
+      color: #ff6b6b;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 35px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    .modal h3 {
+      color: #ff6b6b;
+      margin-top: 0;
+      font-size: 24px;
+    }
+    .modal p {
+      margin: 20px 0;
+      font-size: 16px;
+    }
+    .modal button {
+      margin: 10px 5px;
+    }
+    .progress-bar {
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 6px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #ff9a9a, #ff6b6b);
+      transition: width 0.5s ease;
+    }
+    .nome-input {
+      padding: 12px;
+      border: 2px solid #ff9a9a;
+      border-radius: 8px;
+      width: 100%;
+      margin: 15px 0;
+      font-size: 16px;
+      text-align: center;
+    }
+    .nome-input:focus {
+      outline: none;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+    }
+    .btn-confirmar {
+      background: #4CAF50;
+    }
+    .btn-confirmar:hover {
+      background: #45a049;
+    }
+    .btn-cancelar {
+      background: #f44336;
+    }
+    .btn-cancelar:hover {
+      background: #da190b;
+    }
+    .completo {
+      animation: pulse 2s infinite;
+      background: linear-gradient(90deg, #4CAF50, #45a049);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .loading {
+      text-align: center;
+      color: #ff6b6b;
+      font-style: italic;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎀 Lista de Presentes - Chá de Bebê 🎀</h2>
+    
+    <div class="status">
+      <div id="progress-text">Carregando...</div>
+      <div class="progress-bar">
+        <div id="progress" class="progress" style="width: 0%"></div>
+      </div>
+      <div id="status-message"></div>
+    </div>
+
+    <div id="lista">
+      <div class="loading">Carregando lista de presentes...</div>
+    </div>
+
+    <div id="modal-confirmacao" class="modal">
+      <div class="modal-content">
+        <h3>🎉 Presente Reservado!</h3>
+        <p id="mensagem-confirmacao"></p>
+        <button onclick="fecharModal()">Fechar</button>
+      </div>
+    </div>
+
+    <div id="modal-nome" class="modal">
+      <div class="modal-content">
+        <h3>Digite seu nome</h3>
+        <p>Por favor, digite seu nome completo para reservar este presente:</p>
+        <input type="text" id="input-nome" class="nome-input" placeholder="Seu nome completo">
+        <div>
+          <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar</button>
+          <button class="btn-cancelar" onclick="cancelarReserva()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*******************************
+     * 🗃️ CONFIGURAÇÃO DO BANCO DE DADOS JSON
+     *******************************/
+    
+    // 🔑 SUA CHAVE DO JSONBIN
+    const JSONBIN_API_KEY = '$2a$10$gwK.fRdy/XOY58pUaOrVy.pDA8YA4PizNjsEoK4rD7OWhVRlWiCS6';
+    const JSONBIN_BIN_ID = '691f32a7d0ea881f40f4bdae';
+    
+    // URL do seu banco de dados JSON
+    const DB_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`;
+    const DB_UPDATE_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
+
+    // Estrutura inicial do banco de dados
+    const estruturaInicial = {
+      itens: [
+        { id: 1,  item: "Kit de cortador de unha", reservadoPor: null, data: null },
+        { id: 2,  item: "Kit de pente e escova de cabelo", reservadoPor: null, data: null },
+        { id: 3,  item: "Toalha", reservadoPor: null, data: null },
+        { id: 4,  item: "Toalha", reservadoPor: null, data: null },
+        { id: 5,  item: "Toalha", reservadoPor: null, data: null },
+        { id: 6,  item: "Banheira", reservadoPor: null, data: null },
+        { id: 7,  item: "Kit de mamadeira Mam", reservadoPor: null, data: null },
+        { id: 8,  item: "Trocador Ikea (almofada)", reservadoPor: null, data: null },
+        { id: 9,  item: "Kit de lençol do trocador", reservadoPor: null, data: null },
+        { id: 10, item: "Chupeta Mam 1–3 meses + lenço umedecido", reservadoPor: null, data: null },
+        { id: 11, item: "Chupeta Mam 3–6 meses + lenço umedecido", reservadoPor: null, data: null },
+        { id: 12, item: "Porta chupeta + lenço umedecido", reservadoPor: null, data: null },
+        { id: 13, item: "Porta chupeta", reservadoPor: null, data: null },
+        { id: 14, item: "Manta quentinha", reservadoPor: null, data: null },
+        { id: 15, item: "Pacote de cueiro", reservadoPor: null, data: null },
+        { id: 16, item: "Mordedor + lenço umedecido", reservadoPor: null, data: null },
+        { id: 17, item: "Mordedor + lenço umedecido", reservadoPor: null, data: null },
+        { id: 18, item: "Luvinha + meinha", reservadoPor: null, data: null },
+        { id: 19, item: "Luvinha + meinha", reservadoPor: null, data: null }
+      ],
+      ultimaAtualizacao: new Date().toISOString()
+    };
+
+    let bancoDeDados = { ...estruturaInicial };
+    let itemIdParaReservar = null;
+
+    /************************************
+     * 🔄 FUNÇÕES DO BANCO DE DADOS
+     ************************************/
+
+    // 🔍 BUSCAR DADOS DO BANCO
+    async function carregarDoBanco() {
+      try {
+        console.log('📥 Carregando dados do banco...');
+        
+        const response = await fetch(DB_URL, {
+          method: 'GET',
+          headers: {
+            'X-Master-Key': JSONBIN_API_KEY,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao carregar dados');
+        }
+
+        const data = await response.json();
+        console.log('✅ Dados carregados:', data);
+        
+        if (data.record && data.record.itens) {
+          bancoDeDados = data.record;
+          return true;
+        } else {
+          // Se não existir dados, criar estrutura inicial
+          await salvarNoBanco();
+          return true;
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar do banco:', error);
+        // Usar dados locais em caso de erro
+        bancoDeDados = { ...estruturaInicial };
+        return false;
+      }
+    }
+
+    // 💾 SALVAR DADOS NO BANCO
+    async function salvarNoBanco() {
+      try {
+        console.log('💾 Salvando dados no banco...');
+        
+        bancoDeDados.ultimaAtualizacao = new Date().toISOString();
+        
+        const response = await fetch(DB_UPDATE_URL, {
+          method: 'PUT',
+          headers: {
+            'X-Master-Key': JSONBIN_API_KEY,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(bancoDeDados)
+        });
+
+        if (!response.ok) {
+          throw new Error('Erro ao salvar dados');
+        }
+
+        const data = await response.json();
+        console.log('✅ Dados salvos com sucesso!');
+        return true;
+      } catch (error) {
+        console.error('❌ Erro ao salvar no banco:', error);
+        alert('Erro ao salvar reserva. Tente novamente.');
+        return false;
+      }
+    }
+
+    /**************
+     * 🖥️ RENDERIZAR LISTA
+     **************/
+    function render() {
+      const div = document.getElementById("lista");
+      
+      const itensEscolhidos = bancoDeDados.itens.filter(i => i.reservadoPor).length;
+      const totalItens = bancoDeDados.itens.length;
+      const percentual = (itensEscolhidos / totalItens) * 100;
+      
+      document.getElementById("progress-text").textContent = `Escolhidos: ${itensEscolhidos}/${totalItens}`;
+      document.getElementById("progress").style.width = `${percentual}%`;
+      
+      const statusMessage = document.getElementById("status-message");
+      if (itensEscolhidos === totalItens) {
+        statusMessage.innerHTML = '<div class="completo">🎉 Todos os presentes foram escolhidos! Obrigada a todos! 🎉</div>';
+        enviarNotificacaoCompleta();
+      } else {
+        statusMessage.innerHTML = '';
+      }
+
+      let html = '';
+      bancoDeDados.itens.forEach(i => {
+        const isReservado = i.reservadoPor;
+        html += `
+          <div class="item ${isReservado ? 'reservado' : ''}">
+            <div class="item-text ${isReservado ? 'item-escolhido' : ''}">
+              ${i.item} ${isReservado ? '✅' : ''}
+            </div>
+            <button ${isReservado ? "disabled" : ""} onclick="reservar(${i.id})">
+              ${isReservado ? "Escolhido" : "Escolher"}
+            </button>
+          </div>
+        `;
+      });
+      
+      div.innerHTML = html;
+    }
+
+    /*************************
+     * 🛒 RESERVAR PRESENTE
+     *************************/
+    function reservar(id) {
+      itemIdParaReservar = id;
+      
+      const modal = document.getElementById("modal-nome");
+      const input = document.getElementById("input-nome");
+      input.value = "";
+      modal.style.display = "flex";
+      input.focus();
+    }
+
+    async function confirmarReserva() {
+      const nome = document.getElementById("input-nome").value.trim();
+      
+      if (!nome) {
+        alert("Por favor, digite seu nome!");
+        return;
+      }
+
+      const nomeLower = nome.toLowerCase();
+
+      // Verificar se o nome já escolheu algum item
+      const jaEscolheu = bancoDeDados.itens.some(item => 
+        item.reservadoPor && item.reservadoPor.toLowerCase() === nomeLower
+      );
+      
+      if (jaEscolheu) {
+        alert(`❌ Desculpe, ${nome}, você já escolheu um presente!\n\nCada pessoa pode escolher apenas um item.`);
+        fecharModalNome();
+        return;
+      }
+
+      const item = bancoDeDados.itens.find(x => x.id === itemIdParaReservar);
+      if (!item) {
+        alert("Item não encontrado!");
+        fecharModalNome();
+        return;
+      }
+      
+      if (item.reservadoPor) {
+        alert("❌ Este item já foi escolhido por outra pessoa!");
+        fecharModalNome();
+        return;
+      }
+
+      const agora = new Date().toLocaleString("pt-BR");
+
+      // Fazer a reserva
+      item.reservadoPor = nome;
+      item.data = agora;
+
+      // Salvar no banco de dados
+      const salvou = await salvarNoBanco();
+      
+      if (salvou) {
+        // Atualizar a interface
+        render();
+        // Mostrar confirmação
+        mostrarConfirmacao(nome, item.item);
+      }
+      
+      fecharModalNome();
+    }
+
+    function cancelarReserva() {
+      fecharModalNome();
+    }
+
+    function fecharModalNome() {
+      const modal = document.getElementById("modal-nome");
+      modal.style.display = "none";
+      itemIdParaReservar = null;
+    }
+
+    /*************************
+     * 🎉 MODAL DE CONFIRMAÇÃO
+     *************************/
+    function mostrarConfirmacao(nome, item) {
+      const modal = document.getElementById("modal-confirmacao");
+      const mensagem = document.getElementById("mensagem-confirmacao");
+      
+      mensagem.innerHTML = `
+        <strong>Parabéns, ${nome}!</strong><br><br>
+        Você escolheu: <strong>"${item}"</strong>.<br><br>
+        Obrigada por fazer parte deste momento especial! 💖<br><br>
+        <small>Anote o presente que escolheu para não esquecer!</small>
+      `;
+      modal.style.display = "flex";
+    }
+
+    function fecharModal() {
+      const modal = document.getElementById("modal-confirmacao");
+      modal.style.display = "none";
+    }
+
+    /*************************
+     * 📱 NOTIFICAÇÃO COMPLETA
+     *************************/
+    function enviarNotificacaoCompleta() {
+      let mensagem = "🎉 *LISTA DE PRESENTES COMPLETA!* 🎉\n\n";
+      mensagem += "Todos os presentes foram escolhidos:\n\n";
+      
+      bancoDeDados.itens.forEach(item => {
+        mensagem += `• ${item.item} - ${item.reservadoPor}\n`;
+      });
+      
+      console.log("=== LISTA COMPLETA ===");
+      console.log(mensagem);
+      
+      alert("🎉 LISTA COMPLETA! 🎉\n\n" + mensagem);
+    }
+
+    // Event listeners
+    window.onclick = function(event) {
+      const modalConfirmacao = document.getElementById("modal-confirmacao");
+      const modalNome = document.getElementById("modal-nome");
+      
+      if (event.target === modalConfirmacao) fecharModal();
+      if (event.target === modalNome) fecharModalNome();
+    }
+
+    document.getElementById("input-nome").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") confirmarReserva();
+    });
+
+    /***************************************
+     * 🚀 INICIALIZAÇÃO
+     ***************************************/
+    async function inicializar() {
+      console.log("🚀 Iniciando aplicação...");
+      
+      // Carregar dados do banco
+      const sucesso = await carregarDoBanco();
+      
+      if (sucesso) {
+        render();
+        console.log("✅ Aplicação carregada com sucesso!");
+      } else {
+        document.getElementById("lista").innerHTML = 
+          '<div class="loading">❌ Erro ao carregar dados. Recarregue a página.</div>';
+      }
+    }
+
+    // Iniciar quando a página carregar
+    document.addEventListener('DOMContentLoaded', inicializar);
+
+    // Atualizar a cada 30 segundos para pegar mudanças de outros usuários
+    setInterval(async () => {
+      await carregarDoBanco();
+      render();
+    }, 30000);
+
+  </script>
+</body>
+</html>
