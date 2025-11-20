@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <title>Lista de Presentes - Chá de Bebê</title>
+  <title>Chá de Bebê da Clara</title>
   <style>
     * {
       box-sizing: border-box;
@@ -10,22 +10,72 @@
     body {
       background: #ffe2e2;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .header {
+      background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+      padding: 40px 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: cover;
+    }
+    .header-content {
+      position: relative;
+      z-index: 1;
       max-width: 800px;
       margin: 0 auto;
-      line-height: 1.6;
+    }
+    .header h1 {
+      font-size: 2.8rem;
+      margin: 0 0 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    .header p {
+      font-size: 1.4rem;
+      margin: 0;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    .header-subtitle {
+      font-style: italic;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .content-box {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-top: -20px;
+      position: relative;
+      z-index: 2;
     }
     h2 {
       text-align: center;
       margin-bottom: 30px;
       color: #ff6b6b;
       font-size: 28px;
-    }
-    .container {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     .item {
       background: #f9f9f9;
@@ -174,40 +224,76 @@
       50% { transform: scale(1.02); }
       100% { transform: scale(1); }
     }
+    .decorative-elements {
+      display: flex;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    .decorative-element {
+      font-size: 24px;
+      margin: 0 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .decorative-element:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+    .decorative-element:nth-child(3) {
+      animation-delay: 1s;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
   </style>
 </head>
 <body>
+  <div class="header">
+    <div class="header-content">
+      <h1>Chá da Clara</h1>
+      <p>Um novo amor está a caminho</p>
+      <div class="header-subtitle">chegando...</div>
+      <div class="decorative-elements">
+        <div class="decorative-element">👶</div>
+        <div class="decorative-element">🎀</div>
+        <div class="decorative-element">🐣</div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
-    <h2>🎀 Lista de Presentes - Chá de Bebê 🎀</h2>
-    
-    <div class="status">
-      <div id="progress-text">Carregando...</div>
-      <div class="progress-bar">
-        <div id="progress" class="progress" style="width: 0%"></div>
+    <div class="content-box">
+      <h2>🎀 Lista de Presentes - Chá de Bebê 🎀</h2>
+      
+      <div class="status">
+        <div id="progress-text">Carregando...</div>
+        <div class="progress-bar">
+          <div id="progress" class="progress" style="width: 0%"></div>
+        </div>
+        <div id="status-message"></div>
       </div>
-      <div id="status-message"></div>
-    </div>
 
-    <div id="lista">
-      <div class="loading">Carregando lista de presentes...</div>
-    </div>
-
-    <div id="modal-confirmacao" class="modal">
-      <div class="modal-content">
-        <h3>🎉 Presente Reservado!</h3>
-        <p id="mensagem-confirmacao"></p>
-        <button onclick="fecharModal()">Fechar</button>
+      <div id="lista">
+        <div class="loading">Carregando lista de presentes...</div>
       </div>
-    </div>
 
-    <div id="modal-nome" class="modal">
-      <div class="modal-content">
-        <h3>Digite seu nome</h3>
-        <p>Por favor, digite seu nome completo para reservar este presente:</p>
-        <input type="text" id="input-nome" class="nome-input" placeholder="Seu nome completo">
-        <div>
-          <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar</button>
-          <button class="btn-cancelar" onclick="cancelarReserva()">Cancelar</button>
+      <div id="modal-confirmacao" class="modal">
+        <div class="modal-content">
+          <h3>🎉 Presente Reservado!</h3>
+          <p id="mensagem-confirmacao"></p>
+          <button onclick="fecharModal()">Fechar</button>
+        </div>
+      </div>
+
+      <div id="modal-nome" class="modal">
+        <div class="modal-content">
+          <h3>Digite seu nome</h3>
+          <p>Por favor, digite seu nome completo para reservar este presente:</p>
+          <input type="text" id="input-nome" class="nome-input" placeholder="Seu nome completo">
+          <div>
+            <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar</button>
+            <button class="btn-cancelar" onclick="cancelarReserva()">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
