@@ -2,30 +2,110 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"/>
-  <title>Lista de Presentes - Chá de Bebê</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chá de Bebê da Clara</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
     body {
       background: #ffe2e2;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 20px;
+      padding: 0;
+      margin: 0;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #ffb6c1, #ffc0cb);
+      padding: 40px 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: cover;
+    }
+    .header-content {
+      position: relative;
+      z-index: 1;
       max-width: 800px;
       margin: 0 auto;
-      line-height: 1.6;
+    }
+    .header h1 {
+      font-size: 2.8rem;
+      margin: 0 0 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+    .header p {
+      font-size: 1.4rem;
+      margin: 0;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    .header-subtitle {
+      font-style: italic;
+      margin-top: 10px;
+      font-size: 1.1rem;
+    }
+    .decorative-elements {
+      display: flex;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    .decorative-element {
+      font-size: 24px;
+      margin: 0 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .decorative-element:nth-child(2) {
+      animation-delay: 0.5s;
+    }
+    .decorative-element:nth-child(3) {
+      animation-delay: 1s;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      flex: 1;
+    }
+    .content-box {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-top: -20px;
+      position: relative;
+      z-index: 2;
     }
     h2 {
       text-align: center;
       margin-bottom: 30px;
       color: #ff6b6b;
       font-size: 28px;
-    }
-    .container {
-      background: white;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     .item {
       background: #f9f9f9;
@@ -174,350 +254,76 @@
       50% { transform: scale(1.02); }
       100% { transform: scale(1); }
     }
+    
+    /* Rodapé */
+    .footer {
+      background: linear-gradient(135deg, #ff9a9a, #ff6b6b);
+      color: white;
+      text-align: center;
+      padding: 25px 20px;
+      margin-top: 40px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    }
+    .footer-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .footer p {
+      margin: 10px 0;
+      font-size: 1rem;
+    }
+    .footer a {
+      color: white;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    .footer a:hover {
+      color: #ffe2e2;
+      text-decoration: underline;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 15px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    .social-link:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+    }
+    .footer-divider {
+      width: 80%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 15px auto;
+    }
+    .developer-info {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🎀 Lista de Presentes - Chá de Bebê 🎀</h2>
-    
-    <div class="status">
-      <div id="progress-text">Carregando...</div>
-      <div class="progress-bar">
-        <div id="progress" class="progress" style="width: 0%"></div>
-      </div>
-      <div id="status-message"></div>
-    </div>
-
-    <div id="lista">
-      <div class="loading">Carregando lista de presentes...</div>
-    </div>
-
-    <div id="modal-confirmacao" class="modal">
-      <div class="modal-content">
-        <h3>🎉 Presente Reservado!</h3>
-        <p id="mensagem-confirmacao"></p>
-        <button onclick="fecharModal()">Fechar</button>
-      </div>
-    </div>
-
-    <div id="modal-nome" class="modal">
-      <div class="modal-content">
-        <h3>Digite seu nome</h3>
-        <p>Por favor, digite seu nome completo para reservar este presente:</p>
-        <input type="text" id="input-nome" class="nome-input" placeholder="Seu nome completo">
-        <div>
-          <button class="btn-confirmar" onclick="confirmarReserva()">Confirmar</button>
-          <button class="btn-cancelar" onclick="cancelarReserva()">Cancelar</button>
-        </div>
+  <div class="header">
+    <div class="header-content">
+      <h1>Chá da Clara</h1>
+      <p>Um novo amor está a caminho</p>
       </div>
     </div>
   </div>
 
-  <script>
-    /*******************************
-     * 🗃️ CONFIGURAÇÃO DO BANCO DE DADOS JSON
-     *******************************/
-    
-    // 🔑 SUA CHAVE DO JSONBIN
-    const JSONBIN_API_KEY = '$2a$10$gwK.fRdy/XOY58pUaOrVy.pDA8YA4PizNjsEoK4rD7OWhVRlWiCS6';
-    const JSONBIN_BIN_ID = '691f32a7d0ea881f40f4bdae';
-    
-    // URL do seu banco de dados JSON
-    const DB_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`;
-    const DB_UPDATE_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-
-    // Estrutura inicial do banco de dados
-    const estruturaInicial = {
-      itens: [
-        { id: 1,  item: "Kit de cortador de unha", reservadoPor: null, data: null },
-        { id: 2,  item: "Kit de pente e escova de cabelo", reservadoPor: null, data: null },
-        { id: 3,  item: "Toalha", reservadoPor: null, data: null },
-        { id: 4,  item: "Toalha", reservadoPor: null, data: null },
-        { id: 5,  item: "Toalha", reservadoPor: null, data: null },
-        { id: 6,  item: "Banheira", reservadoPor: null, data: null },
-        { id: 7,  item: "Kit de mamadeira Mam", reservadoPor: null, data: null },
-        { id: 8,  item: "Trocador Ikea (almofada)", reservadoPor: null, data: null },
-        { id: 9,  item: "Kit de lençol do trocador", reservadoPor: null, data: null },
-        { id: 10, item: "Chupeta Mam 1–3 meses + lenço umedecido", reservadoPor: null, data: null },
-        { id: 11, item: "Chupeta Mam 3–6 meses + lenço umedecido", reservadoPor: null, data: null },
-        { id: 12, item: "Porta chupeta + lenço umedecido", reservadoPor: null, data: null },
-        { id: 13, item: "Porta chupeta", reservadoPor: null, data: null },
-        { id: 14, item: "Manta quentinha", reservadoPor: null, data: null },
-        { id: 15, item: "Pacote de cueiro", reservadoPor: null, data: null },
-        { id: 16, item: "Mordedor + lenço umedecido", reservadoPor: null, data: null },
-        { id: 17, item: "Mordedor + lenço umedecido", reservadoPor: null, data: null },
-        { id: 18, item: "Luvinha + meinha", reservadoPor: null, data: null },
-        { id: 19, item: "Luvinha + meinha", reservadoPor: null, data: null }
-      ],
-      ultimaAtualizacao: new Date().toISOString()
-    };
-
-    let bancoDeDados = { ...estruturaInicial };
-    let itemIdParaReservar = null;
-
-    /************************************
-     * 🔄 FUNÇÕES DO BANCO DE DADOS
-     ************************************/
-
-    // 🔍 BUSCAR DADOS DO BANCO
-    async function carregarDoBanco() {
-      try {
-        console.log('📥 Carregando dados do banco...');
-        
-        const response = await fetch(DB_URL, {
-          method: 'GET',
-          headers: {
-            'X-Master-Key': JSONBIN_API_KEY,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Erro ao carregar dados');
-        }
-
-        const data = await response.json();
-        console.log('✅ Dados carregados:', data);
-        
-        if (data.record && data.record.itens) {
-          bancoDeDados = data.record;
-          return true;
-        } else {
-          // Se não existir dados, criar estrutura inicial
-          await salvarNoBanco();
-          return true;
-        }
-      } catch (error) {
-        console.error('❌ Erro ao carregar do banco:', error);
-        // Usar dados locais em caso de erro
-        bancoDeDados = { ...estruturaInicial };
-        return false;
-      }
-    }
-
-    // 💾 SALVAR DADOS NO BANCO
-    async function salvarNoBanco() {
-      try {
-        console.log('💾 Salvando dados no banco...');
-        
-        bancoDeDados.ultimaAtualizacao = new Date().toISOString();
-        
-        const response = await fetch(DB_UPDATE_URL, {
-          method: 'PUT',
-          headers: {
-            'X-Master-Key': JSONBIN_API_KEY,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(bancoDeDados)
-        });
-
-        if (!response.ok) {
-          throw new Error('Erro ao salvar dados');
-        }
-
-        const data = await response.json();
-        console.log('✅ Dados salvos com sucesso!');
-        return true;
-      } catch (error) {
-        console.error('❌ Erro ao salvar no banco:', error);
-        alert('Erro ao salvar reserva. Tente novamente.');
-        return false;
-      }
-    }
-
-    /**************
-     * 🖥️ RENDERIZAR LISTA
-     **************/
-    function render() {
-      const div = document.getElementById("lista");
+  <div class="container">
+    <div class="content-box">
+      <h2>🎀 Lista de Presentes - Chá de Bebê 🎀</h2>
       
-      const itensEscolhidos = bancoDeDados.itens.filter(i => i.reservadoPor).length;
-      const totalItens = bancoDeDados.itens.length;
-      const percentual = (itensEscolhidos / totalItens) * 100;
-      
-      document.getElementById("progress-text").textContent = `Escolhidos: ${itensEscolhidos}/${totalItens}`;
-      document.getElementById("progress").style.width = `${percentual}%`;
-      
-      const statusMessage = document.getElementById("status-message");
-      if (itensEscolhidos === totalItens) {
-        statusMessage.innerHTML = '<div class="completo">🎉 Todos os presentes foram escolhidos! Obrigada a todos! 🎉</div>';
-        enviarNotificacaoCompleta();
-      } else {
-        statusMessage.innerHTML = '';
-      }
-
-      let html = '';
-      bancoDeDados.itens.forEach(i => {
-        const isReservado = i.reservadoPor;
-        html += `
-          <div class="item ${isReservado ? 'reservado' : ''}">
-            <div class="item-text ${isReservado ? 'item-escolhido' : ''}">
-              ${i.item} ${isReservado ? '✅' : ''}
-            </div>
-            <button ${isReservado ? "disabled" : ""} onclick="reservar(${i.id})">
-              ${isReservado ? "Escolhido" : "Escolher"}
-            </button>
-          </div>
-        `;
-      });
-      
-      div.innerHTML = html;
-    }
-
-    /*************************
-     * 🛒 RESERVAR PRESENTE
-     *************************/
-    function reservar(id) {
-      itemIdParaReservar = id;
-      
-      const modal = document.getElementById("modal-nome");
-      const input = document.getElementById("input-nome");
-      input.value = "";
-      modal.style.display = "flex";
-      input.focus();
-    }
-
-    async function confirmarReserva() {
-      const nome = document.getElementById("input-nome").value.trim();
-      
-      if (!nome) {
-        alert("Por favor, digite seu nome!");
-        return;
-      }
-
-      const nomeLower = nome.toLowerCase();
-
-      // Verificar se o nome já escolheu algum item
-      const jaEscolheu = bancoDeDados.itens.some(item => 
-        item.reservadoPor && item.reservadoPor.toLowerCase() === nomeLower
-      );
-      
-      if (jaEscolheu) {
-        alert(`❌ Desculpe, ${nome}, você já escolheu um presente!\n\nCada pessoa pode escolher apenas um item.`);
-        fecharModalNome();
-        return;
-      }
-
-      const item = bancoDeDados.itens.find(x => x.id === itemIdParaReservar);
-      if (!item) {
-        alert("Item não encontrado!");
-        fecharModalNome();
-        return;
-      }
-      
-      if (item.reservadoPor) {
-        alert("❌ Este item já foi escolhido por outra pessoa!");
-        fecharModalNome();
-        return;
-      }
-
-      const agora = new Date().toLocaleString("pt-BR");
-
-      // Fazer a reserva
-      item.reservadoPor = nome;
-      item.data = agora;
-
-      // Salvar no banco de dados
-      const salvou = await salvarNoBanco();
-      
-      if (salvou) {
-        // Atualizar a interface
-        render();
-        // Mostrar confirmação
-        mostrarConfirmacao(nome, item.item);
-      }
-      
-      fecharModalNome();
-    }
-
-    function cancelarReserva() {
-      fecharModalNome();
-    }
-
-    function fecharModalNome() {
-      const modal = document.getElementById("modal-nome");
-      modal.style.display = "none";
-      itemIdParaReservar = null;
-    }
-
-    /*************************
-     * 🎉 MODAL DE CONFIRMAÇÃO
-     *************************/
-    function mostrarConfirmacao(nome, item) {
-      const modal = document.getElementById("modal-confirmacao");
-      const mensagem = document.getElementById("mensagem-confirmacao");
-      
-      mensagem.innerHTML = `
-        <strong>Parabéns, ${nome}!</strong><br><br>
-        Você escolheu: <strong>"${item}"</strong>.<br><br>
-        Obrigada por fazer parte deste momento especial! 💖<br><br>
-        <small>Anote o presente que escolheu para não esquecer!</small>
-      `;
-      modal.style.display = "flex";
-    }
-
-    function fecharModal() {
-      const modal = document.getElementById("modal-confirmacao");
-      modal.style.display = "none";
-    }
-
-    /*************************
-     * 📱 NOTIFICAÇÃO COMPLETA
-     *************************/
-    function enviarNotificacaoCompleta() {
-      let mensagem = "🎉 *LISTA DE PRESENTES COMPLETA!* 🎉\n\n";
-      mensagem += "Todos os presentes foram escolhidos:\n\n";
-      
-      bancoDeDados.itens.forEach(item => {
-        mensagem += `• ${item.item} - ${item.reservadoPor}\n`;
-      });
-      
-      console.log("=== LISTA COMPLETA ===");
-      console.log(mensagem);
-      
-      alert("🎉 LISTA COMPLETA! 🎉\n\n" + mensagem);
-    }
-
-    // Event listeners
-    window.onclick = function(event) {
-      const modalConfirmacao = document.getElementById("modal-confirmacao");
-      const modalNome = document.getElementById("modal-nome");
-      
-      if (event.target === modalConfirmacao) fecharModal();
-      if (event.target === modalNome) fecharModalNome();
-    }
-
-    document.getElementById("input-nome").addEventListener("keypress", function(event) {
-      if (event.key === "Enter") confirmarReserva();
-    });
-
-    /***************************************
-     * 🚀 INICIALIZAÇÃO
-     ***************************************/
-    async function inicializar() {
-      console.log("🚀 Iniciando aplicação...");
-      
-      // Carregar dados do banco
-      const sucesso = await carregarDoBanco();
-      
-      if (sucesso) {
-        render();
-        console.log("✅ Aplicação carregada com sucesso!");
-      } else {
-        document.getElementById("lista").innerHTML = 
-          '<div class="loading">❌ Erro ao carregar dados. Recarregue a página.</div>';
-      }
-    }
-
-    // Iniciar quando a página carregar
-    document.addEventListener('DOMContentLoaded', inicializar);
-
-    // Atualizar a cada 30 segundos para pegar mudanças de outros usuários
-    setInterval(async () => {
-      await carregarDoBanco();
-      render();
-    }, 30000);
-
-  </script>
-</body>
-</html>
+      <div class="
